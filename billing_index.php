@@ -3,10 +3,9 @@ ini_set('display_errors', 'on');
 
 // region autoloaders + sources fetching
 require 'vendor/autoload.php';
-$loader = new Riimu\Kit\ClassLoader\ClassLoader();
-$loader->addPrefixPath('src/BillingSystem', 'BillingSystem');
-$loader->register();
 
+// copy it from sdk if you need to alter
+require 'vendor/dreamcommerce/shop-appstore-lib/examples/BillingSystem/App.php';
 //endregion
 
 date_default_timezone_set('Europe/Warsaw');
