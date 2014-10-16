@@ -10,14 +10,14 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table app.access_tokens
+-- Dumping structure for table app_kit.access_tokens
 CREATE TABLE IF NOT EXISTS `access_tokens` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `shop_id` int(10) unsigned DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `access_token` char(50) COLLATE utf8_polish_ci DEFAULT NULL,
-  `refresh_token` char(50) COLLATE utf8_polish_ci DEFAULT NULL,
+  `access_token` char(40) CHARACTER SET utf8 DEFAULT NULL,
+  `refresh_token` char(40) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `shop_id` (`shop_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `access_tokens` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table app.billings
+-- Dumping structure for table app_kit.billings
 CREATE TABLE IF NOT EXISTS `billings` (
   `id` int(10) unsigned NOT NULL,
   `shop_id` int(10) unsigned DEFAULT NULL,
@@ -37,21 +37,23 @@ CREATE TABLE IF NOT EXISTS `billings` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table app.shops
+-- Dumping structure for table app_kit.shops
 CREATE TABLE IF NOT EXISTS `shops` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `shop` char(50) COLLATE utf8_polish_ci DEFAULT NULL,
+  `shop` char(40) COLLATE utf8_polish_ci DEFAULT NULL,
   `shop_url` varchar(512) COLLATE utf8_polish_ci DEFAULT NULL,
-  `auth_code` char(50) COLLATE utf8_polish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `shop` (`shop`)
+  KEY `shop` (`shop`),
+  CONSTRAINT `FK_shops_access_tokens` FOREIGN KEY (`id`) REFERENCES `access_tokens` (`shop_id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_shops_billings` FOREIGN KEY (`id`) REFERENCES `billings` (`shop_id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_shops_subscriptions` FOREIGN KEY (`id`) REFERENCES `subscriptions` (`shop_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table app.subscriptions
+-- Dumping structure for table app_kit.subscriptions
 CREATE TABLE IF NOT EXISTS `subscriptions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `shop_id` int(10) unsigned NOT NULL,
