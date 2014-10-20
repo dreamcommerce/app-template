@@ -8,11 +8,6 @@ namespace BillingSystem;
 class Config
 {
     /**
-     * shop entrypoint URL (or shop URL)
-     */
-    const ENTRYPOINT = 'https://example.com/'; // or https://example.com/
-
-    /**
      * appstore application ID
      */
     const APPID = '<app-id>';
