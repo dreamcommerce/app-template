@@ -1,6 +1,4 @@
 <?php
-use BillingSystem\Config;
-
 /**
  * Class App
  * example for xml importing

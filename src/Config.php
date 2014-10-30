@@ -1,7 +1,4 @@
 <?php
-
-namespace BillingSystem;
-
 /**
  * Configuration data class
  */

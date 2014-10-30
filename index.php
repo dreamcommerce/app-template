@@ -2,14 +2,12 @@
 ini_set('display_errors', 'on');
 
 // region autoloaders + sources fetching
-require 'vendor/autoload.php';
-$loader = new Riimu\Kit\ClassLoader\ClassLoader();
-$loader->addPrefixPath('src/XmlImporter', 'XmlImporter');
-$loader->addPrefixPath('src/BillingSystem', 'BillingSystem');
-$loader->register();
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/src');
+spl_autoload_register();
+// uncomment if you're using composer
+//require 'vendor/autoload.php';
 
 require 'src/App.php';
-
 //endregion
 
 date_default_timezone_set('Europe/Warsaw');
