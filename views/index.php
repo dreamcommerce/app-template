@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="<?PHP echo $shopUrl; ?>/public/scripts/mootools.js"></script>
     <script src="https://developers.shoper.pl/public/sdk.js"></script>
 
     <script>var app = new ShopApp(function (app) {
@@ -14,7 +15,10 @@
                     document.getElementsByTagName('head')[0].appendChild(el);
                 }
 
-                app.monitorIframeSize();
+                app.show(null ,function () {
+                    app.adjustIframeSize();
+                });
+
 
             }, function (errmsg, app) {
                 alert(errmsg);

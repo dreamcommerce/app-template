@@ -1,20 +1,21 @@
 <?php
-ini_set('display_errors', 'on');
+require 'src/bootstrap.php';
 
-// region autoloaders + sources fetching
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/src');
-spl_autoload_register();
-// uncomment if you're using composer
-//require 'vendor/autoload.php';
-
-require 'src/App.php';
-//endregion
-
-date_default_timezone_set('Europe/Warsaw');
-
+// region i18n
 if(empty($_GET['locale'])) {
     die();
 }
+
+setlocale(LC_ALL, basename($_GET['locale']));
+bindtextdomain('messages', './i18n');
+bind_textdomain_codeset('messages', 'UTF-8');
+textdomain('messages');
+//endregion
+
+//region php configuration
+set_time_limit(0);
+session_start();
+// endregion
 
 try {
 
