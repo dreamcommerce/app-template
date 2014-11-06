@@ -1,6 +1,8 @@
 <!doctype html>
 <html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <script src="<?PHP echo $shopUrl; ?>/public/scripts/mootools.js"></script>
+    <?PHP
+    // todo: mootools here needed right now
+    ?>
     <script src="https://developers.shoper.pl/public/sdk.js"></script>
 
     <script>var app = new ShopApp(function(app) {

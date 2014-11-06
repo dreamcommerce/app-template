@@ -24,10 +24,7 @@ try {
 
 }catch (Exception $ex){
 
-    if($app instanceof App){
-        $app->handleException($ex);
-    }else{
-        die($ex->getMessage());
-    }
+    $message = $ex->getMessage();
+    require 'views/exception.php';
 
 }

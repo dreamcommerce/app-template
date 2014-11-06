@@ -5,7 +5,7 @@ use XmlImporter\Adapters\AdapterException;
  * Class App
  * example for xml importing
  */
-class App implements ArrayAccess
+class App
 {
 
     /**
@@ -34,7 +34,7 @@ class App implements ArrayAccess
         $this->locale = basename($_GET['translations']);
 
         // detect if shop is already installed
-        $shopData = $this->isShopInstalled($_GET['shop']);
+        $shopData = $this->getShopData($_GET['shop']);
         if (!$shopData) {
             throw new Exception(_('An application is not installed in this shop'));
         }
@@ -62,10 +62,28 @@ class App implements ArrayAccess
     protected function dispatch()
     {
 
-        $categories = $this->client->categories->get();
+        $query = empty($_GET['q']) ? 'index/index' : $_GET['q'];
+        $query = str_replace('\\', '', $query);
 
-        $this['categories'] = $categories;
-        $this->render('index');
+        $queryData = explode('/', $query);
+
+        $class = '\\Controllers\\'.$queryData[0];
+
+        if(!class_exists($class)){
+            throw new Exception('Controller not found');
+        }
+
+        $actionName = strtolower($queryData[1]).'Action';
+        $controller = new $class($this);
+        if(!method_exists($controller, $actionName)){
+            throw new Exception('Action not found');
+        }
+
+        call_user_func_array(array($controller, $actionName), array_slice($queryData, 1));
+
+        $viewName = strtolower($queryData[0]).'_'.strtolower($queryData[1]);
+
+        $controller->render($viewName);
 
     }
 
@@ -74,7 +92,7 @@ class App implements ArrayAccess
      * @param $shopData
      * @return \DreamCommerce\Client
      */
-    protected function getClient($shopData)
+    public function getClient($shopData)
     {
 
         $c = new DreamCommerce\Client($shopData['url'], Config::APPID, Config::APP_SECRET);
@@ -89,7 +107,7 @@ class App implements ArrayAccess
      * @return mixed
      * @throws Exception
      */
-    protected function refreshToken($shopData)
+    public function refreshToken($shopData)
     {
         $c = new DreamCommerce\Client($shopData['url'], Config::APPID, Config::APP_SECRET);
         $tokens = $c->refreshToken($shopData['refresh_token']);
@@ -112,7 +130,7 @@ class App implements ArrayAccess
      * checks variables and hash
      * @throws Exception
      */
-    protected function validateRequest()
+    public function validateRequest()
     {
         if (empty($_GET['translations'])) {
             throw new Exception(_('Invalid request'));
@@ -145,7 +163,7 @@ class App implements ArrayAccess
      * @param $shop
      * @return array|bool
      */
-    protected function isShopInstalled($shop)
+    public function getShopData($shop)
     {
         $db = Config::dbConnect();
         $stmt = $db->prepare('select a.access_token as token, a.refresh_token as refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
@@ -157,65 +175,4 @@ class App implements ArrayAccess
 
     }
 
-    /**
-     * shows more friendly exception message
-     * @param Exception $ex
-     */
-    public function handleException(Exception $ex)
-    {
-        $this['message'] = $ex->getMessage();
-        $this->render('exception');
-    }
-
-
-    // region templating
-
-    /**
-     * render application view
-     * @param $tpl
-     */
-    public function render($tpl)
-    {
-
-        static $called = false;
-
-        if ($called) {
-            return;
-        }
-
-        $called = true;
-
-        $vars = $this->viewVars;
-
-        // separate scopes
-        $render = function () use ($tpl, $vars) {
-            extract($vars);
-            require __DIR__ . '/../views/' . basename($tpl, '.php') . '.php';
-        };
-
-        $render();
-    }
-
-
-    public function offsetExists($offset)
-    {
-        return isset($this->viewVars[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->viewVars[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->viewVars[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->viewVars[$offset]);
-    }
-
-    // endregion
 }
