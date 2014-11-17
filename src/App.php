@@ -104,7 +104,7 @@ class App
     public function getClient($shopData)
     {
 
-        $c = new DreamCommerce\Client($shopData['url'], Config::APPID, Config::APP_SECRET);
+        $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
         $c->setAccessToken($shopData['token']);
 
         return $c;
@@ -118,7 +118,7 @@ class App
      */
     public function refreshToken($shopData)
     {
-        $c = new DreamCommerce\Client($shopData['url'], Config::APPID, Config::APP_SECRET);
+        $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
         $tokens = $c->refreshToken($shopData['refresh_token']);
 
         try {
@@ -159,7 +159,7 @@ class App
         $p = join("&", $parameters);
 
 
-        $hash = hash_hmac('sha512', $p, Config::APPSTORE_SECRET);
+        $hash = hash_hmac('sha512', $p, $this->config['appstoreSecret']);
 
         if ($hash != $_GET['hash']) {
             throw new Exception(_('Invalid request'));
