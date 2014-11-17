@@ -22,6 +22,19 @@ class App
     protected $locale = 'pl_PL';
 
     /**
+     * @var array configuration storage
+     */
+    protected $config = array();
+
+    /**
+     * instantiate
+     * @param array $config
+     */
+    public function __construct($config){
+        $this->config = $config;
+    }
+
+    /**
      * main application bootstrap
      * @throws Exception
      */
@@ -113,7 +126,7 @@ class App
         $tokens = $c->refreshToken($shopData['refresh_token']);
 
         try {
-            $db = Config::dbConnect();
+            $db = $this->db();
             $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires=? where shop_id=?');
             $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires']));
         } catch (PDOException $ex) {
@@ -165,7 +178,7 @@ class App
      */
     public function getShopData($shop)
     {
-        $db = Config::dbConnect();
+        $db = $this->db();
         $stmt = $db->prepare('select a.access_token as token, a.refresh_token as refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
         if (!$stmt->execute(array($shop))) {
             return false;
@@ -173,6 +186,24 @@ class App
 
         return $stmt->fetch();
 
+    }
+
+    /**
+     * instantiate db connection
+     * @return PDO
+     */
+    public function db()
+    {
+        static $handle = null;
+        if (!$handle) {
+            $handle = new PDO(
+                $this->config['db']['connection'],
+                $this->config['db']['user'],
+                $this->config['db']['pass']
+            );
+        }
+
+        return $handle;
     }
 
 }

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: eRIZ
- * Date: 2014-11-06
- * Time: 17:04
- */
-
 namespace Controllers;
 
 

@@ -7,7 +7,10 @@ if(empty($_POST['shop_url']) || empty($_POST['action'])){
 }
 
 try{
-    $billingSystem = new BillingSystem\App($_POST['shop_url']);
+
+    $config = require_once 'src/Config.php';
+
+    $billingSystem = new BillingSystem\App($_POST['shop_url'], $config);
     $billingSystem->dispatch();
 }catch(\Exception $ex){
     file_put_contents('log.log', $ex->getMessage().PHP_EOL, FILE_APPEND);

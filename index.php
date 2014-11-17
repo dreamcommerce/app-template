@@ -19,7 +19,9 @@ session_start();
 
 try {
 
-    $app = new App();
+    $config = require_once 'src/Config.php';
+
+    $app = new App($config);
     $app->bootstrap();
 
 }catch (Exception $ex){
