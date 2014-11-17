@@ -9,10 +9,6 @@ class App
 {
 
     /**
-     * @var array variables stored for view
-     */
-    protected $viewVars = array();
-    /**
      * @var null|DreamCommerce\Client
      */
     protected $client = null;
