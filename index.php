@@ -19,14 +19,17 @@ session_start();
 
 try {
 
-    $config = require_once 'src/Config.php';
+    $config = require 'src/Config.php';
 
     $app = new App($config);
     $app->bootstrap();
 
-}catch (Exception $ex){
+}catch (\Exception $ex){
 
-    $message = $ex->getMessage();
-    require 'views/exception.php';
+    if($app instanceof App){
+        $app->handleException($ex);
+    }else{
+        die($ex->getMessage());
+    }
 
 }

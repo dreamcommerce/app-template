@@ -2,7 +2,7 @@
 namespace Controllers;
 
 
-class AbstractController implements ArrayAccess {
+class ControllerAbstract implements \ArrayAccess {
 
     /**
      * @var App
@@ -10,11 +10,50 @@ class AbstractController implements ArrayAccess {
     protected $app;
 
     /**
-     * @param App $app
+     * @var array
      */
-    public function __construct(App $app){
+    protected $viewVars = array();
+
+    /**
+     * @param \App $app
+     */
+    public function __construct(\App $app){
         $this->app = $app;
     }
+
+    /**
+     * perform internal redirect (allows keeping all parameters within URL)
+     * @param string $url
+     */
+    public function redirect($url){
+
+        header('Location: '.$this->getUrl($url));
+        exit;
+
+    }
+
+    /**
+     * get url to redirect to
+     * @param string $url
+     * @return string
+     */
+    public function getUrl($url){
+
+        if(!$this->app->config['useRewrite']){
+
+            $params = array();
+            parse_str($_SERVER['QUERY_STRING'], $params);
+            $params['q'] = $url;
+
+            $query = http_build_query($params);
+
+            return $url.'?'.$query;
+
+        }else{
+            return $url.'?'.$_SERVER['QUERY_STRING'];
+        }
+    }
+
 
     // region templating
 

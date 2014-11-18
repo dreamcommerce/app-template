@@ -13,5 +13,6 @@ return array(
             'root',
         'pass' =>
             ''
-    )
+    ),
+    'useRewrite' => false
 );

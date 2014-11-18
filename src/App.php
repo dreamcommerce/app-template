@@ -18,9 +18,14 @@ class App
     protected $locale = 'pl_PL';
 
     /**
+     * @var array current shop metadata
+     */
+    public $shopData = array();
+
+    /**
      * @var array configuration storage
      */
-    protected $config = array();
+    public $config = array();
 
     /**
      * instantiate
@@ -48,8 +53,7 @@ class App
             throw new Exception(_('An application is not installed in this shop'));
         }
 
-        // preserve shop URL for tpl
-        $this['shopUrl'] = $shopData['url'];
+        $this->shopData = $shopData;
 
         // refresh token
         if (strtotime($shopData['expires']) - time() < 86400) {
@@ -57,7 +61,7 @@ class App
         }
 
         // instantiate SDK client
-        $this->client = $this->getClient($shopData);
+        $this->client = $this->instantiateClient($shopData);
 
         // fire
         $this->dispatch();
@@ -71,12 +75,18 @@ class App
     protected function dispatch()
     {
 
+        // check for parameter existence
         $query = empty($_GET['q']) ? 'index/index' : $_GET['q'];
+        if($query[0]=='/'){
+            $query = substr($query, 1);
+        }
+
         $query = str_replace('\\', '', $query);
 
         $queryData = explode('/', $query);
 
-        $class = '\\Controllers\\'.$queryData[0];
+        $controllerName = ucfirst($queryData[0]);
+        $class = '\\Controllers\\'.$controllerName;
 
         if(!class_exists($class)){
             throw new Exception('Controller not found');
@@ -88,26 +98,49 @@ class App
             throw new Exception('Action not found');
         }
 
-        call_user_func_array(array($controller, $actionName), array_slice($queryData, 1));
+        $controller['shopUrl'] = $this->shopData['url'];
 
-        $viewName = strtolower($queryData[0]).'_'.strtolower($queryData[1]);
+        $result = call_user_func_array(array($controller, $actionName), array_slice($queryData, 2));
 
-        $controller->render($viewName);
+        if($result!==false) {
+            $viewName = strtolower($queryData[0]) . '_' . strtolower($queryData[1]);
+            $controller->render($viewName);
+        }
 
     }
 
     /**
-     * get client resource
+     * instantiate client resource
      * @param $shopData
      * @return \DreamCommerce\Client
      */
-    public function getClient($shopData)
+    public function instantiateClient($shopData)
     {
 
         $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
         $c->setAccessToken($shopData['token']);
 
         return $c;
+    }
+
+    /**
+     * get client resource
+     * @throws Exception
+     * @return \DreamCommerce\Client|null
+     */
+    public function getClient(){
+        if($this->client===null){
+            throw new Exception('Client is NOT instantiated');
+        }
+
+        return $this->client;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale(){
+        return $this->locale;
     }
 
     /**
@@ -200,6 +233,55 @@ class App
         }
 
         return $handle;
+    }
+
+    /**
+     * shows more friendly exception message
+     * @param Exception $ex
+     */
+    public function handleException(\Exception $ex)
+    {
+        $message = $ex->getMessage();
+        require __DIR__.'/../views/exception.php';
+    }
+
+    /**
+     * set or get data to/from cache
+     * @param string $type group
+     * @param null|string|array $key if null - returns whole group; array - sets group with array
+     * @param mixed $value if empty - get, fulfilled - set with desired value
+     * @return array|null
+     */
+    static public function cache($type, $key = null, $value = ''){
+        if(!isset($_SESSION['cache'][$type])){
+            $_SESSION['cache'][$type] = array();
+        }
+
+        if(!$key){
+            return empty($_SESSION['cache'][$type]) ? array() : $_SESSION['cache'][$type];
+        }else if(is_array($key)){
+            $_SESSION['cache'][$type] = $key;
+            return;
+        }
+
+        if($value){
+            $_SESSION['cache'][$type][$key] = $value;
+        }else{
+            return !empty($_SESSION['cache'][$type][$key]) ? $_SESSION['cache'][$type][$key] : null;
+        }
+
+    }
+
+    /**
+     * set cache group
+     * @param null|string $type group to purge
+     */
+    static public function cachePurge($type = null){
+        if($type) {
+            $_SESSION['cache'][$type] = array();
+        }else{
+            $_SESSION['cache'] = array();
+        }
     }
 
 }
