@@ -18,7 +18,7 @@ spl_autoload_register(function($class){
 });
 
 // uncomment if you're using composer
-require 'vendor/autoload.php';
+//require 'vendor/autoload.php';
 
 // uncomment if you want to debug whole traffic
 //DreamCommerce\Http::setDebug('http.log');

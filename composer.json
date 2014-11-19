@@ -1,5 +1,17 @@
 {
-  "require-dev": {
-    "dreamcommerce/shop-appstore-lib": "@dev"
-  }
+    "scripts": {
+        "post-package-install": [
+            "php -r \"@mkdir('examples');\"",
+            "php -r \"@mkdir('examples/sql');\"",
+            "php -r \"copy('vendor/dreamcommerce/shop-appstore-lib/examples/sql/sqlite.sql', 'examples/sql/sqlite.sql');\"",
+            "php -r \"copy('vendor/dreamcommerce/shop-appstore-lib/examples/sql/mysql.sql', 'examples/sql/mysql.sql');\"",
+            "php -r \"copy('vendor/dreamcommerce/shop-appstore-lib/examples/sql/postgresql.sql', 'examples/sql/postgresql.sql');\"",
+            "php -r \"@mkdir('src/BillingSystem');\"",
+            "php -r \"copy('vendor/dreamcommerce/shop-appstore-lib/examples/BillingSystem/App.php', 'src/BillingSystem/App.php');\"",
+            "php -r \"file_put_contents('src/bootstrap.php', str_replace('//require \\'vendor/autoload.php\\';', 'require \\'vendor/autoload.php\\';', file_get_contents('src/bootstrap.php')));\""
+        ]
+    },
+    "require-dev": {
+        "dreamcommerce/shop-appstore-lib": "@dev"
+    }
 }
