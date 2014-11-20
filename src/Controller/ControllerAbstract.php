@@ -1,5 +1,5 @@
 <?php
-namespace Controllers;
+namespace Controller;
 
 
 class ControllerAbstract implements \ArrayAccess {
@@ -77,7 +77,7 @@ class ControllerAbstract implements \ArrayAccess {
         // separate scopes
         $render = function () use ($tpl, $vars) {
             extract($vars);
-            require __DIR__ . '/../../views/' . basename($tpl, '.php') . '.php';
+            require __DIR__ . '/../../view/' . basename($tpl, '.php') . '.php';
         };
 
         $render();

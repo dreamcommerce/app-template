@@ -86,7 +86,7 @@ class App
         $queryData = explode('/', $query);
 
         $controllerName = ucfirst($queryData[0]);
-        $class = '\\Controllers\\'.$controllerName;
+        $class = '\\Controller\\'.$controllerName;
 
         if(!class_exists($class)){
             throw new Exception('Controller not found');
@@ -242,7 +242,7 @@ class App
     public function handleException(\Exception $ex)
     {
         $message = $ex->getMessage();
-        require __DIR__.'/../views/exception.php';
+        require __DIR__ . '/../view/exception.php';
     }
 
     /**
