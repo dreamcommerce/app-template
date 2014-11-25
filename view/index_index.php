@@ -36,7 +36,10 @@
 
         <div class="edition-form">
 
-            <p>Hello World!</p>
+            <p>Hello World! <?PHP
+                // or translated
+                //echo _('Hello World!');
+                ?></p>
 
             <pre><?PHP var_dump($categories); ?></pre>
 
