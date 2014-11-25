@@ -14,5 +14,6 @@ return array(
         'pass' =>
             ''
     ),
-    'useRewrite' => false
+    'useRewrite' => false,
+    'debug' => false
 );

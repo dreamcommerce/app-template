@@ -1,6 +1,4 @@
 <?php
-require 'src/bootstrap.php';
-
 // valid request?
 if(empty($_POST['shop_url']) || empty($_POST['action'])){
     die;
@@ -8,7 +6,7 @@ if(empty($_POST['shop_url']) || empty($_POST['action'])){
 
 try{
 
-    $config = require_once 'src/Config.php';
+    $config = require_once 'src/bootstrap.php';
 
     $billingSystem = new BillingSystem\App($_POST['shop_url'], $config);
     $billingSystem->dispatch();

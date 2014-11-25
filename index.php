@@ -1,6 +1,4 @@
 <?php
-require 'src/bootstrap.php';
-
 // region i18n
 if(empty($_GET['locale'])) {
     die();
@@ -19,7 +17,7 @@ session_start();
 
 try {
 
-    $config = require 'src/Config.php';
+    $config = require 'src/bootstrap.php';
 
     $app = new App($config);
     $app->bootstrap();

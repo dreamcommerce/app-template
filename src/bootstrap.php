@@ -17,8 +17,13 @@ spl_autoload_register(function($class){
     require 'src/'.$class.'.php';
 });
 
-// uncomment if you're using composer
+// composer autoloader - patched automatically
 //require 'vendor/autoload.php';
 
-// uncomment if you want to debug whole traffic
-//DreamCommerce\Http::setDebug('http.log');
+$config = require './Config.php';
+
+if(isset($config['debug'])){
+    putenv('DREAMCOMMERCE_DEBUG='.$config['debug']);
+}
+
+return $config;
