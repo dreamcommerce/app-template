@@ -1,5 +1,5 @@
 <?php
-namespace Controller;
+namespace Controllers;
 
 
 class ControllerAbstract implements \ArrayAccess {
@@ -15,9 +15,16 @@ class ControllerAbstract implements \ArrayAccess {
     protected $viewVars = array();
 
     /**
-     * @param \App $app
+     * @var array request params
      */
-    public function __construct(\App $app){
+    protected $params = array();
+
+    /**
+     * @param \App $app
+     * @param array $params
+     */
+    public function __construct(\App $app, $params = array()){
+        $this->params = $params;
         $this->app = $app;
     }
 
