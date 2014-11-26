@@ -157,7 +157,7 @@ class App
         try {
             $db = $this->db();
             $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires=? where shop_id=?');
-            $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires']));
+            $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires'], $tokens['shop']));
         } catch (PDOException $ex) {
             throw new Exception(_('Database error'), 0, $ex);
         }
