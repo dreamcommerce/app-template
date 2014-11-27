@@ -20,7 +20,7 @@ spl_autoload_register(function($class){
 // composer autoloader - patched automatically
 //require 'vendor/autoload.php';
 
-$config = require './Config.php';
+$config = require __DIR__. '/Config.php';
 
 if(isset($config['debug'])){
     putenv('DREAMCOMMERCE_DEBUG='.$config['debug']);
