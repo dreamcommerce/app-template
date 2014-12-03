@@ -1,5 +1,5 @@
 <?php
-namespace Controllers;
+namespace Controller;
 
 
 class ControllerAbstract implements \ArrayAccess {
