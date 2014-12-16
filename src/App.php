@@ -1,6 +1,4 @@
 <?php
-use XmlImporter\Adapters\AdapterException;
-
 /**
  * Class App
  * example for xml importing
