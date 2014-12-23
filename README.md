@@ -23,15 +23,11 @@ That's all.
 
 Simply [download ZIP](https://github.com/dreamcommerce/shop-appstore-lib/archive/master.zip) with our SDK and extract its contents to this directory. That's all.
 
-Under most circumstances, the default version of ``BillingSystem`` shipped with SDK will be sufficient. Copy ``examples/BillingSystem/App.php`` to ``src/BillingSystem/App.php``.
-
-If you're using Composer, this file is already copied. 
-
 ### 2. setup credentials
 
 In ``src/Config.php`` there are several options to adjust. Specify your application ID, application secrets and database credentials.
 
-An example database schemas are under ``examples/sql`` directory. Feel free using them. They are suitable for stock ``BillingSystem``. 
+An example database schemas are under ``sql`` directory. Feel free using them. They are suitable for stock ``BillingSystem``.
 
 ### 3. put an application on your server
 

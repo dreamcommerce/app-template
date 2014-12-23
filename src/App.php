@@ -1,5 +1,4 @@
 <?php
-use XmlImporter\Adapters\AdapterException;
 
 /**
  * Class App
@@ -50,7 +49,7 @@ class App
         // detect if shop is already installed
         $shopData = $this->getShopData($_GET['shop']);
         if (!$shopData) {
-            throw new Exception(_('An application is not installed in this shop'));
+            throw new Exception('An application is not installed in this shop');
         }
 
         $this->shopData = $shopData;
@@ -159,7 +158,7 @@ class App
             $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires=? where shop_id=?');
             $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires'], $tokens['shop']));
         } catch (PDOException $ex) {
-            throw new Exception(_('Database error'), 0, $ex);
+            throw new Exception('Database error', 0, $ex);
         }
 
         $shopData['refresh_token'] = $tokens['refresh_token'];
@@ -175,7 +174,7 @@ class App
     public function validateRequest()
     {
         if (empty($_GET['translations'])) {
-            throw new Exception(_('Invalid request'));
+            throw new Exception('Invalid request');
         }
 
         $params = array(
@@ -195,7 +194,7 @@ class App
         $hash = hash_hmac('sha512', $p, $this->config['appstoreSecret']);
 
         if ($hash != $_GET['hash']) {
-            throw new Exception(_('Invalid request'));
+            throw new Exception('Invalid request');
         }
 
     }
@@ -241,47 +240,7 @@ class App
      */
     public function handleException(\Exception $ex)
     {
-        $message = $ex->getMessage();
+        $message = htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8');
         require __DIR__ . '/../view/exception.php';
     }
-
-    /**
-     * set or get data to/from cache
-     * @param string $type group
-     * @param null|string|array $key if null - returns whole group; array - sets group with array
-     * @param mixed $value if empty - get, fulfilled - set with desired value
-     * @return array|null
-     */
-    static public function cache($type, $key = null, $value = ''){
-        if(!isset($_SESSION['cache'][$type])){
-            $_SESSION['cache'][$type] = array();
-        }
-
-        if(!$key){
-            return empty($_SESSION['cache'][$type]) ? array() : $_SESSION['cache'][$type];
-        }else if(is_array($key)){
-            $_SESSION['cache'][$type] = $key;
-            return;
-        }
-
-        if($value){
-            $_SESSION['cache'][$type][$key] = $value;
-        }else{
-            return !empty($_SESSION['cache'][$type][$key]) ? $_SESSION['cache'][$type][$key] : null;
-        }
-
-    }
-
-    /**
-     * set cache group
-     * @param null|string $type group to purge
-     */
-    static public function cachePurge($type = null){
-        if($type) {
-            $_SESSION['cache'][$type] = array();
-        }else{
-            $_SESSION['cache'] = array();
-        }
-    }
-
 }
