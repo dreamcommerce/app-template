@@ -23,7 +23,11 @@ try {
     if($app instanceof App){
         $app->handleException($ex);
     }else{
-        die($ex->getMessage());
+        if(class_exists("\\DreamCommerce\\Logger")) {
+            \DreamCommerce\Logger::error($ex);
+        }else{
+            die($ex->getMessage());
+        }
     }
 
 }

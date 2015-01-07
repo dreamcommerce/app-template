@@ -102,7 +102,7 @@ class App
         $result = call_user_func_array(array($controller, $actionName), array_slice($queryData, 2));
 
         if($result!==false) {
-            $viewName = strtolower($queryData[0]) . '_' . strtolower($queryData[1]);
+            $viewName = strtolower($queryData[0]) . '/' . strtolower($queryData[1]);
             $controller->render($viewName);
         }
 

@@ -34,9 +34,15 @@ return array(
     ),
 
     /*
-     * Path to log file or false to disable debug
+     * Enable debug mode or not
      */
     'debug' => false,
+
+    /*
+     * Path to log file or empty to disable logging
+     */
+    'logFile' => "logs/application.log",
+
 
     /*
      * timezone of the application

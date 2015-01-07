@@ -37,9 +37,9 @@
 
             <p>Hello World!</p>
 
-            <pre><?PHP // todo fix me XSS
-            var_dump($categories); ?></pre>
-
+            <pre><?PHP
+                var_dump($categories);
+            ?></pre>
             <div class="clearfix"></div>
         </div>
     </section>
