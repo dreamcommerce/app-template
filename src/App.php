@@ -91,6 +91,11 @@ class App
             throw new Exception('Controller not found');
         }
 
+        $params = $_GET;
+        if(!empty($params['id'])){
+            $params['id'] = @json_decode($params['id']);
+        }
+
         $actionName = strtolower($queryData[1]).'Action';
         $controller = new $class($this);
         if(!method_exists($controller, $actionName)){
