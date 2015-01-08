@@ -45,20 +45,13 @@ class ControllerAbstract implements \ArrayAccess {
      * @return string
      */
     public function getUrl($url){
+        $params = array();
+        parse_str($_SERVER['QUERY_STRING'], $params);
+        $params['q'] = $url;
 
-        if(!$this->app->config['useRewrite']){
+        $query = http_build_query($params);
 
-            $params = array();
-            parse_str($_SERVER['QUERY_STRING'], $params);
-            $params['q'] = $url;
-
-            $query = http_build_query($params);
-
-            return $url.'?'.$query;
-
-        }else{
-            return $url.'?'.$_SERVER['QUERY_STRING'];
-        }
+        return $url.'?'.$query;
     }
 
 

@@ -5,14 +5,10 @@ if(empty($_GET['locale'])) {
 }
 
 setlocale(LC_ALL, basename($_GET['locale']));
-bindtextdomain('messages', './i18n');
-bind_textdomain_codeset('messages', 'UTF-8');
-textdomain('messages');
 //endregion
 
 //region php configuration
 set_time_limit(0);
-session_start();
 // endregion
 
 try {
@@ -27,7 +23,11 @@ try {
     if($app instanceof App){
         $app->handleException($ex);
     }else{
-        die($ex->getMessage());
+        if(class_exists("\\DreamCommerce\\Logger")) {
+            \DreamCommerce\Logger::error($ex);
+        }else{
+            die($ex->getMessage());
+        }
     }
 
 }

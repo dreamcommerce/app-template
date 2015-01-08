@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <script src="<?PHP echo $shopUrl; ?>/public/scripts/mootools.js"></script>
     <script src="https://developers.shoper.pl/public/sdk.js"></script>
 
     <script>var app = new ShopApp(function (app) {
@@ -36,13 +35,11 @@
 
         <div class="edition-form">
 
-            <p>Hello World! <?PHP
-                // or translated
-                //echo _('Hello World!');
-                ?></p>
+            <p>Hello World!</p>
 
-            <pre><?PHP var_dump($categories); ?></pre>
-
+            <pre><?PHP
+                var_dump($categories);
+            ?></pre>
             <div class="clearfix"></div>
         </div>
     </section>
