@@ -240,7 +240,11 @@ class App
      */
     public function handleException(\Exception $ex)
     {
-        $message = htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8');
+        $message = $ex->getMessage();
         require __DIR__ . '/../view/exception.php';
+    }
+
+    public static function escapeHtml($message){
+        return htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     }
 }

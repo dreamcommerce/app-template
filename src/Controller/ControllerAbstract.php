@@ -73,11 +73,25 @@ class ControllerAbstract implements \ArrayAccess {
         $called = true;
 
         $vars = $this->viewVars;
+        $vars["_locale"] = $this->app->getLocale();
 
         // separate scopes
         $render = function () use ($tpl, $vars) {
+            $template = explode("/", $tpl, 2);
+            if(count($template) == 2){
+                if($template[0] == "." or $template[0] == ".."){
+                    return;
+                }
+                $__t = $template[0] . "/". basename($template[1], '.php');
+            }elseif(count($template) == 1){
+                $__t = basename($template[0], '.php');
+            }else{
+                return;
+            }
+            unset($template, $tpl);
+            unset($vars['__t']);
             extract($vars);
-            require __DIR__ . '/../../view/' . basename($tpl, '.php') . '.php';
+            require __DIR__ . '/../../view/' . $__t . '.php';
         };
 
         $render();

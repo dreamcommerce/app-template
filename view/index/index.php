@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <script src="https://developers.shoper.pl/public/sdk.js"></script>
+    <script src="https://cdn.dcsaas.net/js/appstore-sdk.js"></script>
 
     <script>var app = new ShopApp(function (app) {
             app.init(null, function (params, app) {
@@ -35,11 +35,27 @@
 
         <div class="edition-form">
 
-            <p>Hello World!</p>
+            <p>Kategorie sklepu (<?php echo App::escapeHtml($categories->count); ?>):</p>
+            <ul>
+                <?php
+                foreach($categories as $c){
+                    // array access
+                    if(isset($c['translations'][$_locale])){
+                        ?>
+                        <li>
+                            <?php
+                            // object property access
+                            echo App::escapeHtml($c->translations->$_locale->name);
 
-            <pre><?PHP
-                var_dump($categories);
-            ?></pre>
+                            ?>
+
+                            (id: <?php echo App::escapeHtml($c['category_id']); ?>)
+                        </li>
+                    <?php
+                    }
+                }
+                ?>
+            </ul>
             <div class="clearfix"></div>
         </div>
     </section>

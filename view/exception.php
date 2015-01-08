@@ -1,6 +1,6 @@
 <!doctype html>
 <html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <script src="https://developers.shoper.pl/public/sdk.js"></script>
+    <script src="https://cdn.dcsaas.net/js/appstore-sdk.js"></script>
 
     <script>var app = new ShopApp(function(app) {
             app.init(null, function(params, app) {
@@ -27,7 +27,7 @@
 <main class="rwd-layout-width rwd-layout-container">
     <section class="rwd-layout-col-12">
 
-        <p><?PHP echo $message; ?></p>
+        <p><?php echo App::escapeHtml($message); ?></p>
 
     </section></main>
 
