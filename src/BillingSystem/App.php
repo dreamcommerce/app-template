@@ -99,9 +99,9 @@ class App
 
             // store tokens in db
             $tokensStmt = $this->db()->prepare('INSERT INTO access_tokens (shop_id, expires_at, access_token, refresh_token) VALUES (?,?,?,?)');
-            $expirationDate = date('Y-m-d H:i:s', time() + $tokens->expires_in);
+            $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
             $tokensStmt->execute(array(
-                $shopId, $expirationDate, $tokens->access_token, $tokens->refresh_token
+                $shopId, $expirationDate, $tokens['access_token'], $tokens['refresh_token']
             ));
 
         } catch (\PDOException $ex) {
