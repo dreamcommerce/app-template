@@ -45,13 +45,7 @@ class ControllerAbstract implements \ArrayAccess {
      * @return string
      */
     public function getUrl($url){
-        $params = array();
-        parse_str($_SERVER['QUERY_STRING'], $params);
-        $params['q'] = $url;
-
-        $query = http_build_query($params);
-
-        return $url.'?'.$query;
+        return \App::getUrl($url);
     }
 
 
