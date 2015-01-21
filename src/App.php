@@ -252,4 +252,12 @@ class App
     public static function escapeHtml($message){
         return htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     }
+    
+    public static function getUrl($url){
+        $params = array();
+        parse_str($_SERVER['QUERY_STRING'], $params);
+        $params['q'] = $url;
+        $query = http_build_query($params);
+        return $url.'?'.$query;
+    }
 }
