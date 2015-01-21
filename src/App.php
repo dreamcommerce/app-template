@@ -91,6 +91,11 @@ class App
             throw new Exception('Controller not found');
         }
 
+        $params = $_GET;
+        if(!empty($params['id'])){
+            $params['id'] = @json_decode($params['id']);
+        }
+
         $actionName = strtolower($queryData[1]).'Action';
         $controller = new $class($this);
         if(!method_exists($controller, $actionName)){
@@ -240,7 +245,11 @@ class App
      */
     public function handleException(\Exception $ex)
     {
-        $message = htmlspecialchars($ex->getMessage(), ENT_QUOTES, 'UTF-8');
+        $message = $ex->getMessage();
         require __DIR__ . '/../view/exception.php';
+    }
+
+    public static function escapeHtml($message){
+        return htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     }
 }
