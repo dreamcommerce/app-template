@@ -97,7 +97,7 @@ class App
         }
 
         $actionName = strtolower($queryData[1]).'Action';
-        $controller = new $class($this);
+        $controller = new $class($this, $params);
         if(!method_exists($controller, $actionName)){
             throw new Exception('Action not found');
         }
