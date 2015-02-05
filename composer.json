@@ -1,4 +1,19 @@
 {
+    "autoload": {
+        "psr-4": { "DreamCommerce\\": "vendor/dreamcommerce/shop-appstore-lib/src/DreamCommerce/" }
+    },
+    "repositories": [{
+        "type": "package",
+        "package": {
+            "name": "dreamcommerce/shop-appstore-lib",
+            "version": "master",
+            "source": {
+                "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
+                "type": "git",
+                "reference": "master"
+            }
+        }
+    }],
     "scripts": {
         "post-package-install": [
             "php -r \"file_put_contents('src/bootstrap.php', str_replace('//require \\'vendor/autoload.php\\';', 'require \\'vendor/autoload.php\\';', file_get_contents('src/bootstrap.php')));\""

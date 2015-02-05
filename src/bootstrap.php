@@ -9,7 +9,9 @@ if (PHP_VERSION_ID < 50600) {
 // internal autoloader
 spl_autoload_register(function($class){
     $class = str_replace('\\', '/', $class);
-    require 'src/'.$class.'.php';
+    if (file_exists('src/'.$class.'.php')) {
+        require 'src/'.$class.'.php';
+    }
 });
 
 // composer autoloader - patched automatically
