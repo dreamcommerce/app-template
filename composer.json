@@ -1,4 +1,7 @@
 {
+    "autoload": {
+        "psr-4": { "DreamCommerce\\": "vendor/dreamcommerce/shop-appstore-lib/src/DreamCommerce/" }
+    },
     "repositories": [{
         "type": "package",
         "package": {
