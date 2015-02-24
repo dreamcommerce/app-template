@@ -13,7 +13,7 @@
                     injectStyles(styles);
                 }
 
-                window.app = new ShopApp(function (app) {
+                window.shopAppInstance = new ShopApp(function (app) {
                     app.init(null, function (params, app) {
                         if (localStorage.getItem('styles') === null) {
                             injectStyles(params.styles);
