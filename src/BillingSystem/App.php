@@ -36,6 +36,7 @@ class App
 
             // subscribe to particular events
             $handler->subscribe('install', array($this, 'installHandler'));
+            $handler->subscribe('upgrade', array($this, 'upgradeHandler'));
             $handler->subscribe('billing_install', array($this, 'billingInstallHandler'));
             $handler->subscribe('billing_subscription', array($this, 'billingSubscriptionHandler'));
             $handler->subscribe('uninstall', array($this, 'uninstallHandler'));
@@ -70,6 +71,7 @@ class App
      * - shop
      * - shop_url
      * - application_code
+     * - application_version
      * - auth_code
      * - hash
      * - timestamp
@@ -83,9 +85,9 @@ class App
         try {
 
             // shop installation
-            $shopStmt = $this->db()->prepare('INSERT INTO shops (shop, shop_url) values (?,?)');
+            $shopStmt = $this->db()->prepare('INSERT INTO shops (shop, shop_url, version) values (?,?,?)');
             $shopStmt->execute(array(
-                $arguments['shop'], $arguments['shop_url']
+                $arguments['shop'], $arguments['shop_url'], $arguments['application_version']
             ));
 
             $shopId = $this->db()->lastInsertId();
@@ -142,6 +144,36 @@ class App
             throw $ex;
         }
 
+    }
+
+    /**
+     * upgrade action
+     * arguments:
+     * - action
+     * - shop
+     * - shop_url
+     * - application_code
+     * - application_version
+     * - hash
+     * - timestamp
+     *
+     * @param array $arguments
+     * @throws \Exception
+     */
+    public function upgradeHandler($arguments)
+    {
+        try {
+            $shopId = $this->getShopId($arguments['shop']);
+
+            // shop upgrade
+            $shopStmt = $this->db()->prepare('UPDATE shops set version = ? WHERE id = '.(int)$shopId);
+            $shopStmt->execute(array($arguments['application_version']));
+
+        } catch (\PDOException $ex) {
+            throw new \Exception('Database error', 0, $ex);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
