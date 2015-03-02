@@ -8,6 +8,8 @@
             (function () {
                 'use strict';
 
+                var styles;
+
                 if (localStorage.getItem('styles')) {
                     styles = JSON.parse(localStorage.getItem('styles'));
                     injectStyles(styles);
@@ -38,7 +40,7 @@
                         el = document.createElement('link');
                         el.rel = 'stylesheet';
                         el.type = 'text/css';
-                        el.href = styles[x];
+                        el.href = styles[i];
                         document.getElementsByTagName('head')[0].appendChild(el);
                     }
                 }
