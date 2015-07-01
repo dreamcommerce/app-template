@@ -1,25 +1,18 @@
 {
-    "autoload": {
-        "psr-4": { "DreamCommerce\\": "vendor/dreamcommerce/shop-appstore-lib/src/DreamCommerce/" }
+    "name": "dreamcommerce/app-template",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.3",
+        "dreamcommerce/shop-appstore-lib": "0.2.*"
     },
-    "repositories": [{
-        "type": "package",
-        "package": {
-            "name": "dreamcommerce/shop-appstore-lib",
-            "version": "master",
-            "source": {
-                "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
-                "type": "git",
-                "reference": "master"
-            }
+    "autoload": {
+        "psr-4": {
+            "DreamCommerce\\": "vendor/dreamcommerce/shop-appstore-lib/src/DreamCommerce/"
         }
-    }],
+    },
     "scripts": {
         "post-package-install": [
             "php -r \"file_put_contents('src/bootstrap.php', str_replace('//require \\'vendor/autoload.php\\';', 'require \\'vendor/autoload.php\\';', file_get_contents('src/bootstrap.php')));\""
         ]
-    },
-    "require-dev": {
-        "dreamcommerce/shop-appstore-lib": "@dev"
     }
 }
