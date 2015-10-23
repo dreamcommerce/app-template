@@ -5,19 +5,20 @@
         "This file is @generated automatically"
     ],
     "hash": "02f3607f022e69cf6c8fa45042386dc9",
+    "content-hash": "4e18c32ba99adf95be8b86076ea61cca",
     "packages": [
         {
             "name": "dreamcommerce/shop-appstore-lib",
-            "version": "0.2.3",
+            "version": "0.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
-                "reference": "f0fd153f59f3efdb136a7129ef4bf733424f2625"
+                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/f0fd153f59f3efdb136a7129ef4bf733424f2625",
-                "reference": "f0fd153f59f3efdb136a7129ef4bf733424f2625",
+                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/2d2209bfeb75e2c6b029f9433fa3f00730716e88",
+                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88",
                 "shasum": ""
             },
             "require": {
@@ -38,10 +39,14 @@
                 {
                     "name": "Przemysław eRIZ Pawliczuk",
                     "email": "przemyslaw.pawliczuk@shoper.pl"
+                },
+                {
+                    "name": "Michał Korus",
+                    "email": "michal.korus@shoper.pl"
                 }
             ],
             "description": "SDK for Dreamcommerce based shops REST-API",
-            "time": "2015-06-23 15:34:48"
+            "time": "2015-10-16 13:05:04"
         },
         {
             "name": "psr/log",
