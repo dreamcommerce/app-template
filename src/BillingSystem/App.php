@@ -1,4 +1,5 @@
 <?php
+
 namespace BillingSystem;
 
 use DreamCommerce\Exception\ClientException;
@@ -81,16 +82,34 @@ class App
      */
     public function installHandler($arguments)
     {
+        /** @var \PDO $db */
+        $db = $this->db();
 
         try {
+            $db->beginTransaction();
 
-            // shop installation
-            $shopStmt = $this->db()->prepare('INSERT INTO shops (shop, shop_url, version) values (?,?,?)');
-            $shopStmt->execute(array(
-                $arguments['shop'], $arguments['shop_url'], $arguments['application_version']
-            ));
+            $update = false;
+            try {
+                $shopId = $this->getShopId($arguments['shop']);
+                $update = true;
+            } catch(\Exception $exc) {
+                // ignore
+            }
 
-            $shopId = $this->db()->lastInsertId();
+            if($update) {
+                $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ? WHERE id = ?');
+                $shopStmtUpdate->execute(
+                    $arguments['shop_url'], $arguments['application_version'], $shopId
+                );
+            } else {
+                // shop installation
+                $shopStmtInsert = $db->prepare('INSERT INTO shops (shop, shop_url, version) values (?,?,?)');
+                $shopStmtInsert->execute(array(
+                    $arguments['shop'], $arguments['shop_url'], $arguments['application_version']
+                ));
+
+                $shopId = $db->lastInsertId();
+            }
 
             // get OAuth tokens
             try {
@@ -100,15 +119,29 @@ class App
             }
 
             // store tokens in db
-            $tokensStmt = $this->db()->prepare('INSERT INTO access_tokens (shop_id, expires_at, access_token, refresh_token) VALUES (?,?,?,?)');
             $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
-            $tokensStmt->execute(array(
-                $shopId, $expirationDate, $tokens['access_token'], $tokens['refresh_token']
-            ));
+            if($update) {
+                $tokensStmtUpdate = $db->prepare('UPDATE access_tokens SET expires_at = ?, access_token = ?, refresh_token = ? WHERE shop_id = ?');
+                $tokensStmtUpdate->execute(array(
+                    $expirationDate, $tokens['access_token'], $tokens['refresh_token'], $shopId
+                ));
+            } else {
+                $tokensStmtInsert = $db->prepare('INSERT INTO access_tokens (shop_id, expires_at, access_token, refresh_token) VALUES (?,?,?,?)');
+                $tokensStmtInsert->execute(array(
+                    $shopId, $expirationDate, $tokens['access_token'], $tokens['refresh_token']
+                ));
+            }
 
+            $db->commit();
         } catch (\PDOException $ex) {
+            if($db->inTransaction()) {
+                $db->rollBack();
+            }
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
+            if($db->inTransaction()) {
+                $db->rollBack();
+            }
             throw $ex;
         }
 
@@ -278,7 +311,7 @@ class App
 
     /**
      * return (and instantiate if needed) a db connection
-     * @return PDO
+     * @return \PDO
      */
     public function db()
     {
