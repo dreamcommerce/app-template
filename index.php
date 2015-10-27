@@ -19,6 +19,7 @@ try {
     $app->bootstrap();
 
 }catch (\Exception $ex){
+    @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 
     if($app instanceof App){
         $app->handleException($ex);
