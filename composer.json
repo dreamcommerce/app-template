@@ -1,10 +1,18 @@
 {
+    "name": "dreamcommerce/app-template",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.3",
+        "dreamcommerce/shop-appstore-lib": "0.2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "DreamCommerce\\": "vendor/dreamcommerce/shop-appstore-lib/src/DreamCommerce/"
+        }
+    },
     "scripts": {
         "post-package-install": [
             "php -r \"file_put_contents('src/bootstrap.php', str_replace('//require \\'vendor/autoload.php\\';', 'require \\'vendor/autoload.php\\';', file_get_contents('src/bootstrap.php')));\""
         ]
-    },
-    "require-dev": {
-        "dreamcommerce/shop-appstore-lib": "@dev"
     }
 }

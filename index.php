@@ -19,12 +19,14 @@ try {
     $app->bootstrap();
 
 }catch (\Exception $ex){
+    @header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 
     if($app instanceof App){
         $app->handleException($ex);
     }else{
         if(class_exists("\\DreamCommerce\\Logger")) {
-            \DreamCommerce\Logger::error($ex);
+            $logger = new \DreamCommerce\Logger;
+            $logger->error('Message: ' . $ex->getMessage() . '; code: ' . $ex->getCode() . '; stack trace: ' . $ex->getTraceAsString());
         }else{
             die($ex->getMessage());
         }

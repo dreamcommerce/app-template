@@ -1,4 +1,5 @@
 <?php
+
 namespace BillingSystem;
 
 use DreamCommerce\Exception\ClientException;
@@ -36,6 +37,7 @@ class App
 
             // subscribe to particular events
             $handler->subscribe('install', array($this, 'installHandler'));
+            $handler->subscribe('upgrade', array($this, 'upgradeHandler'));
             $handler->subscribe('billing_install', array($this, 'billingInstallHandler'));
             $handler->subscribe('billing_subscription', array($this, 'billingSubscriptionHandler'));
             $handler->subscribe('uninstall', array($this, 'uninstallHandler'));
@@ -70,6 +72,7 @@ class App
      * - shop
      * - shop_url
      * - application_code
+     * - application_version
      * - auth_code
      * - hash
      * - timestamp
@@ -79,16 +82,34 @@ class App
      */
     public function installHandler($arguments)
     {
+        /** @var \PDO $db */
+        $db = $this->db();
 
         try {
+            $db->beginTransaction();
 
-            // shop installation
-            $shopStmt = $this->db()->prepare('INSERT INTO shops (shop, shop_url) values (?,?)');
-            $shopStmt->execute(array(
-                $arguments['shop'], $arguments['shop_url']
-            ));
+            $update = false;
+            try {
+                $shopId = $this->getShopId($arguments['shop']);
+                $update = true;
+            } catch(\Exception $exc) {
+                // ignore
+            }
 
-            $shopId = $this->db()->lastInsertId();
+            if($update) {
+                $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ? WHERE id = ?');
+                $shopStmtUpdate->execute(
+                    $arguments['shop_url'], $arguments['application_version'], $shopId
+                );
+            } else {
+                // shop installation
+                $shopStmtInsert = $db->prepare('INSERT INTO shops (shop, shop_url, version) values (?,?,?)');
+                $shopStmtInsert->execute(array(
+                    $arguments['shop'], $arguments['shop_url'], $arguments['application_version']
+                ));
+
+                $shopId = $db->lastInsertId();
+            }
 
             // get OAuth tokens
             try {
@@ -98,15 +119,29 @@ class App
             }
 
             // store tokens in db
-            $tokensStmt = $this->db()->prepare('INSERT INTO access_tokens (shop_id, expires_at, access_token, refresh_token) VALUES (?,?,?,?)');
-            $expirationDate = date('Y-m-d H:i:s', time() + $tokens->expires_in);
-            $tokensStmt->execute(array(
-                $shopId, $expirationDate, $tokens->access_token, $tokens->refresh_token
-            ));
+            $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
+            if($update) {
+                $tokensStmtUpdate = $db->prepare('UPDATE access_tokens SET expires_at = ?, access_token = ?, refresh_token = ? WHERE shop_id = ?');
+                $tokensStmtUpdate->execute(array(
+                    $expirationDate, $tokens['access_token'], $tokens['refresh_token'], $shopId
+                ));
+            } else {
+                $tokensStmtInsert = $db->prepare('INSERT INTO access_tokens (shop_id, expires_at, access_token, refresh_token) VALUES (?,?,?,?)');
+                $tokensStmtInsert->execute(array(
+                    $shopId, $expirationDate, $tokens['access_token'], $tokens['refresh_token']
+                ));
+            }
 
+            $db->commit();
         } catch (\PDOException $ex) {
+            if($db->inTransaction()) {
+                $db->rollBack();
+            }
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
+            if($db->inTransaction()) {
+                $db->rollBack();
+            }
             throw $ex;
         }
 
@@ -142,6 +177,36 @@ class App
             throw $ex;
         }
 
+    }
+
+    /**
+     * upgrade action
+     * arguments:
+     * - action
+     * - shop
+     * - shop_url
+     * - application_code
+     * - application_version
+     * - hash
+     * - timestamp
+     *
+     * @param array $arguments
+     * @throws \Exception
+     */
+    public function upgradeHandler($arguments)
+    {
+        try {
+            $shopId = $this->getShopId($arguments['shop']);
+
+            // shop upgrade
+            $shopStmt = $this->db()->prepare('UPDATE shops set version = ? WHERE id = '.(int)$shopId);
+            $shopStmt->execute(array($arguments['application_version']));
+
+        } catch (\PDOException $ex) {
+            throw new \Exception('Database error', 0, $ex);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
@@ -246,7 +311,7 @@ class App
 
     /**
      * return (and instantiate if needed) a db connection
-     * @return PDO
+     * @return \PDO
      */
     public function db()
     {
