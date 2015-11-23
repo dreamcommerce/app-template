@@ -19,11 +19,7 @@ Clone this repository or [download ZIP](https://github.com/dreamcommerce/app-tem
 
 #### composer way
 
-If you are familiar with [Composer](http://getcomposer.org), you can simply call ``composer install``.
-
-#### manual way
-
-[download ZIP](https://github.com/dreamcommerce/shop-appstore-lib/archive/master.zip) with our SDK and extract its contents to the application directory.
+Use [Composer](http://getcomposer.org) and simply call ``composer install``.
 
 ### 3. setup credentials
 
