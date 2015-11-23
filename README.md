@@ -17,8 +17,6 @@ Clone this repository or [download ZIP](https://github.com/dreamcommerce/app-tem
 
 ### 2. obtain and install SDK
 
-#### composer way
-
 Use [Composer](http://getcomposer.org) and simply call ``composer install``.
 
 ### 3. setup credentials
