@@ -11,7 +11,7 @@ Template could be used as a boilerplate for your own app used with our shops.
 
 ## how to start
 
-### 1. obtain and install Application Tamplate
+### 1. obtain and install Application Template
 
 Clone this repository or [download ZIP](https://github.com/dreamcommerce/app-template/archive/master.zip) with current version and extract its content to your application directory.
 
