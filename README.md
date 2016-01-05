@@ -11,19 +11,13 @@ Template could be used as a boilerplate for your own app used with our shops.
 
 ## how to start
 
-### 1. obtain and install Application Tamplate
+### 1. obtain and install Application Template
 
 Clone this repository or [download ZIP](https://github.com/dreamcommerce/app-template/archive/master.zip) with current version and extract its content to your application directory.
 
 ### 2. obtain and install SDK
 
-#### composer way
-
-If you are familiar with [Composer](http://getcomposer.org), you can simply call ``composer install``.
-
-#### manual way
-
-[download ZIP](https://github.com/dreamcommerce/shop-appstore-lib/archive/master.zip) with our SDK and extract its contents to the application directory.
+Use [Composer](http://getcomposer.org) and simply call ``composer install``.
 
 ### 3. setup credentials
 
