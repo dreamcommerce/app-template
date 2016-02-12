@@ -122,7 +122,7 @@ class App
     {
 
         $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
-        $c->setAccessToken($shopData['token']);
+        $c->setAccessToken($shopData['access_token']);
 
         return $c;
     }
@@ -157,11 +157,12 @@ class App
     {
         $c = new DreamCommerce\Client($shopData['url'], $this->config['appId'], $this->config['appSecret']);
         $tokens = $c->refreshToken($shopData['refresh_token']);
+        $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
 
         try {
             $db = $this->db();
             $stmt = $db->prepare('update access_tokens set refresh_token=?, access_token=?, expires_at=? where shop_id=?');
-            $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $tokens['expires'], $tokens['shop']));
+            $stmt->execute(array($tokens['refresh_token'], $tokens['access_token'], $expirationDate, $shopData['id']));
         } catch (PDOException $ex) {
             throw new Exception('Database error', 0, $ex);
         }
@@ -212,7 +213,7 @@ class App
     public function getShopData($shop)
     {
         $db = $this->db();
-        $stmt = $db->prepare('select a.access_token as token, a.refresh_token as refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
+        $stmt = $db->prepare('select a.access_token, a.refresh_token, s.shop_url as url, a.expires_at as expires, a.shop_id as id from access_tokens a join shops s on a.shop_id=s.id where s.shop=?');
         if (!$stmt->execute(array($shop))) {
             return false;
         }
