@@ -3,7 +3,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.3.3",
-        "dreamcommerce/shop-appstore-lib": "0.2.*"
+        "dreamcommerce/shop-appstore-lib": "~1.0.2"
     },
     "autoload": {
         "psr-4": {

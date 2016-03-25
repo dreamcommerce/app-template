@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `shops` (
   `shop` varchar(128) DEFAULT NULL,
   `shop_url` varchar(512) DEFAULT NULL,
   `version` int(11) DEFAULT NULL,
+  `installed` SMALLINT(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `shop` (`shop`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

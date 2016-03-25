@@ -2,9 +2,11 @@
 
 namespace BillingSystem;
 
-use DreamCommerce\Exception\ClientException;
-use DreamCommerce\Exception\HandlerException;
-use DreamCommerce\Handler;
+use DreamCommerce\ShopAppstoreLib\Client;
+use DreamCommerce\ShopAppstoreLib\Client\Exception\Exception as ClientException;
+use DreamCommerce\ShopAppstoreLib\Exception\HandlerException;
+use DreamCommerce\ShopAppstoreLib\Handler;
+use DreamCommerce\ShopAppstoreLib\Client\OAuth;
 
 class App
 {
@@ -97,13 +99,13 @@ class App
             }
 
             if($update) {
-                $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ? WHERE id = ?');
+                $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ?, installed = 1 WHERE id = ?');
                 $shopStmtUpdate->execute(
                     $arguments['shop_url'], $arguments['application_version'], $shopId
                 );
             } else {
                 // shop installation
-                $shopStmtInsert = $db->prepare('INSERT INTO shops (shop, shop_url, version) values (?,?,?)');
+                $shopStmtInsert = $db->prepare('INSERT INTO shops (shop, shop_url, version, installed) values (?,?,?,1)');
                 $shopStmtInsert->execute(array(
                     $arguments['shop'], $arguments['shop_url'], $arguments['application_version']
                 ));
@@ -113,7 +115,10 @@ class App
 
             // get OAuth tokens
             try {
-                $tokens = $arguments['client']->getToken($arguments['auth_code']);
+                /** @var OAuth $c */
+                $c = $arguments['client'];
+                $c->setAuthCode($arguments['auth_code']);
+                $tokens = $c->authenticate();
             } catch (ClientException $ex) {
                 throw new \Exception('Client error', 0, $ex);
             }
@@ -231,10 +236,11 @@ class App
             $conn = $this->db();
 
             // remove shop's references
-            $conn->query('DELETE FROM shops WHERE id=' . (int)$shopId);
-            $conn->query('DELETE FROM billings WHERE shop_id=' . (int)$shopId);
-            $conn->query('DELETE FROM subscriptions WHERE shop_id=' . (int)$shopId);
-            $conn->query('DELETE FROM access_tokens WHERE shop_id=' . (int)$shopId);
+            $conn->query('UPDATE shops SET installed = 0 WHERE id=' . (int)$shopId);
+            $tokens = $conn->prepare('UPDATE access_tokens SET access_token = ?, refresh_token = ? WHERE id = ?');
+            $tokens->execute(array(
+                '', '', $shopId
+            ));
 
         } catch (\PDOException $ex) {
             throw new \Exception('Database error', 0, $ex);

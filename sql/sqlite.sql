@@ -23,6 +23,7 @@ CREATE TABLE "shops" (
   "shop_url" varchar(512) DEFAULT NULL,
   "version" int(11) DEFAULT NULL,
   "auth_code" char(50) DEFAULT NULL,
+  "installed" int(1) DEFAULT 0
   PRIMARY KEY ("id")
 );
 CREATE TABLE "subscriptions" (

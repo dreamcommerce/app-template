@@ -1,24 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "02f3607f022e69cf6c8fa45042386dc9",
-    "content-hash": "4e18c32ba99adf95be8b86076ea61cca",
+    "hash": "156d966a683955e777e9080644a82538",
     "packages": [
         {
             "name": "dreamcommerce/shop-appstore-lib",
-            "version": "0.2.9",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamcommerce/shop-appstore-lib.git",
-                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88"
+                "reference": "392385be49d33702d3a3d863aed722c2a2468754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/2d2209bfeb75e2c6b029f9433fa3f00730716e88",
-                "reference": "2d2209bfeb75e2c6b029f9433fa3f00730716e88",
+                "url": "https://api.github.com/repos/dreamcommerce/shop-appstore-lib/zipball/392385be49d33702d3a3d863aed722c2a2468754",
+                "reference": "392385be49d33702d3a3d863aed722c2a2468754",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +45,7 @@
                 }
             ],
             "description": "SDK for Dreamcommerce based shops REST-API",
-            "time": "2015-10-16 13:05:04"
+            "time": "2016-03-15 10:58:29"
         },
         {
             "name": "psr/log",

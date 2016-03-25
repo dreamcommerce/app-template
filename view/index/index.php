@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
-        <script src="https://cdn.dcsaas.net/js/appstore-sdk.js"></script>
+        <script src="//cdn.dcsaas.net/js/dc-sdk-1.0.2.min.js"></script>
 
         <script>
             (function () {

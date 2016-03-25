@@ -89,7 +89,8 @@ CREATE TABLE shops (
     shop character varying(128),
     shop_url character varying(512),
     version integer,
-    auth_code character(50)
+    auth_code character(50),
+    installed boolean DEFAULT FALSE
 );
 
 
