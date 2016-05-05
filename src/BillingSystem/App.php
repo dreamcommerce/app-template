@@ -237,9 +237,9 @@ class App
 
             // remove shop's references
             $conn->query('UPDATE shops SET installed = 0 WHERE id=' . (int)$shopId);
-            $tokens = $conn->prepare('UPDATE access_tokens SET access_token = ?, refresh_token = ? WHERE id = ?');
+            $tokens = $conn->prepare('UPDATE access_tokens SET access_token = ?, refresh_token = ? WHERE shop_id = ?');
             $tokens->execute(array(
-                '', '', $shopId
+                NULL, NULL, $shopId
             ));
 
         } catch (\PDOException $ex) {
