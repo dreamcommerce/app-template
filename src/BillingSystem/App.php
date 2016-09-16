@@ -269,10 +269,10 @@ class App
     {
         try {
 
-            $shopId = $this->getShopId($arguments->shop);
+            $shopId = $this->getShopId($arguments['shop']);
 
             // make sure we convert timestamp correctly
-            $expiresAt = date('Y-m-d H:i:s', strtotime($arguments->subscription_end_time));
+            $expiresAt = date('Y-m-d H:i:s', strtotime($arguments['subscription_end_time']));
 
             if (!$expiresAt) {
                 throw new \Exception('Malformed timestamp');
