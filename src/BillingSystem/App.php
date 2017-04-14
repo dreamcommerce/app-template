@@ -100,9 +100,9 @@ class App
 
             if($update) {
                 $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ?, installed = 1 WHERE id = ?');
-                $shopStmtUpdate->execute(
+                $shopStmtUpdate->execute(array(
                     $arguments['shop_url'], $arguments['application_version'], $shopId
-                );
+                ));
             } else {
                 // shop installation
                 $shopStmtInsert = $db->prepare('INSERT INTO shops (shop, shop_url, version, installed) values (?,?,?,1)');
