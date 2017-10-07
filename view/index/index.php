@@ -55,16 +55,14 @@
                     <p>Kategorie sklepu (<?php echo App::escapeHtml($categories->count); ?>):</p>
                     <ul>
                         <?php
-                        foreach($categories as $c){
+                        foreach ($categories as $c) {
                             // array access
-                            if(isset($c['translations'][$_locale])){
+                            if (isset($c['translations'][$_locale])) {
                                 ?>
                                 <li>
                                     <?php
                                     // object property access
-                                    echo App::escapeHtml($c->translations->$_locale->name);
-
-                                    ?>
+                                    echo App::escapeHtml($c->translations->$_locale->name); ?>
 
                                     (id: <?php echo App::escapeHtml($c['category_id']); ?>)
                                 </li>
