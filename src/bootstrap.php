@@ -7,7 +7,7 @@ if (PHP_VERSION_ID < 50600) {
 }
 
 // internal autoloader
-spl_autoload_register(function($class){
+spl_autoload_register(function ($class) {
     $class = str_replace('\\', '/', $class);
     if (file_exists('src/'.$class.'.php')) {
         require 'src/'.$class.'.php';
@@ -25,22 +25,22 @@ ini_set('display_errors', $config['php']['display_errors']);
 
 // check debug mode options
 $debug = false;
-if(isset($config['debug'])){
-    if($config['debug']){
+if (isset($config['debug'])) {
+    if ($config['debug']) {
         $debug = true;
     }
 }
-if(getenv('DREAMCOMMERCE_DEBUG')){
+if (getenv('DREAMCOMMERCE_DEBUG')) {
     $debug = true;
 }
 define("DREAMCOMMERCE_DEBUG", $debug);
 
 // log errors
 $logFile = "php://stdout";
-if(isset($config['logFile'])){
-    if($config['logFile']){
+if (isset($config['logFile'])) {
+    if ($config['logFile']) {
         $logFile = $config['logFile'];
-    }else{
+    } else {
         $config['logFile'] = false;
     }
 }

@@ -33,7 +33,8 @@ class App
      * instantiate
      * @param array $config
      */
-    public function __construct($config){
+    public function __construct($config)
+    {
         $this->config = $config;
     }
 
@@ -67,7 +68,6 @@ class App
 
         // fire
         $this->dispatch();
-
     }
 
     /**
@@ -79,7 +79,7 @@ class App
 
         // check for parameter existence
         $query = empty($_GET['q']) ? 'index/index' : $_GET['q'];
-        if($query[0]=='/'){
+        if ($query[0]=='/') {
             $query = substr($query, 1);
         }
 
@@ -90,18 +90,18 @@ class App
         $controllerName = ucfirst($queryData[0]);
         $class = '\\Controller\\'.$controllerName;
 
-        if(!class_exists($class)){
+        if (!class_exists($class)) {
             throw new Exception('Controller not found');
         }
 
         $params = $_GET;
-        if(!empty($params['id'])){
+        if (!empty($params['id'])) {
             $params['id'] = @json_decode($params['id']);
         }
 
         $actionName = strtolower($queryData[1]).'Action';
         $controller = new $class($this, $params);
-        if(!method_exists($controller, $actionName)){
+        if (!method_exists($controller, $actionName)) {
             throw new Exception('Action not found');
         }
 
@@ -109,11 +109,10 @@ class App
 
         $result = call_user_func_array(array($controller, $actionName), array_slice($queryData, 2));
 
-        if($result!==false) {
+        if ($result!==false) {
             $viewName = strtolower($queryData[0]) . '/' . strtolower($queryData[1]);
             $controller->render($viewName);
         }
-
     }
 
     /**
@@ -138,8 +137,9 @@ class App
      * @throws Exception
      * @return \DreamCommerce\ShopAppstoreLib\Client|null
      */
-    public function getClient(){
-        if($this->client===null){
+    public function getClient()
+    {
+        if ($this->client===null) {
             throw new Exception('Client is NOT instantiated');
         }
 
@@ -149,7 +149,8 @@ class App
     /**
      * @return string
      */
-    public function getLocale(){
+    public function getLocale()
+    {
         return $this->locale;
     }
 
@@ -214,7 +215,6 @@ class App
         if ($hash != $_GET['hash']) {
             throw new Exception('Invalid request');
         }
-
     }
 
     /**
@@ -231,7 +231,6 @@ class App
         }
 
         return $stmt->fetch();
-
     }
 
     /**
@@ -262,11 +261,13 @@ class App
         require __DIR__ . '/../view/exception.php';
     }
 
-    public static function escapeHtml($message){
+    public static function escapeHtml($message)
+    {
         return htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     }
     
-    public static function getUrl($url){
+    public static function getUrl($url)
+    {
         $params = array();
         parse_str($_SERVER['QUERY_STRING'], $params);
         $params['q'] = $url;

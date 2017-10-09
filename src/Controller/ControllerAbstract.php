@@ -1,8 +1,8 @@
 <?php
 namespace Controller;
 
-
-class ControllerAbstract implements \ArrayAccess {
+class ControllerAbstract implements \ArrayAccess
+{
 
     /**
      * @var App
@@ -23,7 +23,8 @@ class ControllerAbstract implements \ArrayAccess {
      * @param \App $app
      * @param array $params
      */
-    public function __construct(\App $app, $params = array()){
+    public function __construct(\App $app, $params = array())
+    {
         $this->params = $params;
         $this->app = $app;
     }
@@ -32,11 +33,10 @@ class ControllerAbstract implements \ArrayAccess {
      * perform internal redirect (allows keeping all parameters within URL)
      * @param string $url
      */
-    public function redirect($url){
-
+    public function redirect($url)
+    {
         header('Location: '.$this->getUrl($url));
         exit;
-
     }
 
     /**
@@ -44,7 +44,8 @@ class ControllerAbstract implements \ArrayAccess {
      * @param string $url
      * @return string
      */
-    public function getUrl($url){
+    public function getUrl($url)
+    {
         return \App::getUrl($url);
     }
 
@@ -57,7 +58,6 @@ class ControllerAbstract implements \ArrayAccess {
      */
     public function render($tpl)
     {
-
         static $called = false;
 
         if ($called) {
@@ -72,14 +72,14 @@ class ControllerAbstract implements \ArrayAccess {
         // separate scopes
         $render = function () use ($tpl, $vars) {
             $template = explode("/", $tpl, 2);
-            if(count($template) == 2){
-                if($template[0] == "." or $template[0] == ".."){
+            if (count($template) == 2) {
+                if ($template[0] == "." or $template[0] == "..") {
                     return;
                 }
                 $__t = $template[0] . "/". basename($template[1], '.php');
-            }elseif(count($template) == 1){
+            } elseif (count($template) == 1) {
                 $__t = basename($template[0], '.php');
-            }else{
+            } else {
                 return;
             }
             unset($template, $tpl);
@@ -113,5 +113,4 @@ class ControllerAbstract implements \ArrayAccess {
     }
 
     // endregion
-
-} 
+}

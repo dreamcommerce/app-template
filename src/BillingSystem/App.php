@@ -28,7 +28,6 @@ class App
      */
     public function __construct($entrypoint, $config)
     {
-
         $this->config = $config;
 
         try {
@@ -43,7 +42,6 @@ class App
             $handler->subscribe('billing_install', array($this, 'billingInstallHandler'));
             $handler->subscribe('billing_subscription', array($this, 'billingSubscriptionHandler'));
             $handler->subscribe('uninstall', array($this, 'uninstallHandler'));
-
         } catch (HandlerException $ex) {
             throw new \Exception('Handler initialization failed', 0, $ex);
         }
@@ -94,11 +92,11 @@ class App
             try {
                 $shopId = $this->getShopId($arguments['shop']);
                 $update = true;
-            } catch(\Exception $exc) {
+            } catch (\Exception $exc) {
                 // ignore
             }
 
-            if($update) {
+            if ($update) {
                 $shopStmtUpdate = $db->prepare('UPDATE shops SET shop_url = ?, version = ?, installed = 1 WHERE id = ?');
                 $shopStmtUpdate->execute(array(
                     $arguments['shop_url'], $arguments['application_version'], $shopId
@@ -125,7 +123,7 @@ class App
 
             // store tokens in db
             $expirationDate = date('Y-m-d H:i:s', time() + $tokens['expires_in']);
-            if($update) {
+            if ($update) {
                 $tokensStmtUpdate = $db->prepare('UPDATE access_tokens SET expires_at = ?, access_token = ?, refresh_token = ? WHERE shop_id = ?');
                 $tokensStmtUpdate->execute(array(
                     $expirationDate, $tokens['access_token'], $tokens['refresh_token'], $shopId
@@ -139,17 +137,16 @@ class App
 
             $db->commit();
         } catch (\PDOException $ex) {
-            if($db->inTransaction()) {
+            if ($db->inTransaction()) {
                 $db->rollBack();
             }
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
-            if($db->inTransaction()) {
+            if ($db->inTransaction()) {
                 $db->rollBack();
             }
             throw $ex;
         }
-
     }
 
     /**
@@ -167,7 +164,6 @@ class App
      */
     public function billingInstallHandler($arguments)
     {
-
         try {
             $shopId = $this->getShopId($arguments['shop']);
 
@@ -181,7 +177,6 @@ class App
         } catch (\Exception $ex) {
             throw $ex;
         }
-
     }
 
     /**
@@ -206,7 +201,6 @@ class App
             // shop upgrade
             $shopStmt = $this->db()->prepare('UPDATE shops set version = ? WHERE id = '.(int)$shopId);
             $shopStmt->execute(array($arguments['application_version']));
-
         } catch (\PDOException $ex) {
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
@@ -230,7 +224,6 @@ class App
     public function uninstallHandler($arguments)
     {
         try {
-
             $shopId = $this->getShopId($arguments['shop']);
 
             $conn = $this->db();
@@ -239,16 +232,13 @@ class App
             $conn->query('UPDATE shops SET installed = 0 WHERE id=' . (int)$shopId);
             $tokens = $conn->prepare('UPDATE access_tokens SET access_token = ?, refresh_token = ? WHERE shop_id = ?');
             $tokens->execute(array(
-                NULL, NULL, $shopId
+                null, null, $shopId
             ));
-
         } catch (\PDOException $ex) {
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
             throw $ex;
         }
-
-
     }
 
     /**
@@ -268,7 +258,6 @@ class App
     public function billingSubscriptionHandler($arguments)
     {
         try {
-
             $shopId = $this->getShopId($arguments['shop']);
 
             // make sure we convert timestamp correctly
@@ -283,13 +272,11 @@ class App
             $stmt->execute(array(
                 $shopId, $expiresAt
             ));
-
         } catch (\PDOException $ex) {
             throw new \Exception('Database error', 0, $ex);
         } catch (\Exception $ex) {
             throw $ex;
         }
-
     }
 
     /**
@@ -300,7 +287,6 @@ class App
      */
     public function getShopId($shop)
     {
-
         $conn = $this->db();
         $stmt = $conn->prepare('SELECT id FROM shops WHERE shop=?');
 
@@ -332,5 +318,4 @@ class App
 
         return $handle;
     }
-
 }
